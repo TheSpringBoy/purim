@@ -30,22 +30,28 @@ client.on('ready', () => {
 app.use(bodyParser.json());
 
 // Endpoint to handle sending messages
-app.post('/send-message', async (req, res) => {
-  const { phoneNumber, message } = req.body;
+app.post('/send-message', (req, res) => {
+  let { phoneNumber, message } = req.body;
 
-  try {
-    // Find the chat corresponding to the provided phone number
-    const chat = await client.getChatById(phoneNumber);
-
-    // Send WhatsApp message using the chat ID
-    await client.sendMessage(chat.id._serialized, message);
-
-    res.status(200).send('Message sent successfully');
-  } catch (error) {
-    console.error('Error sending message:', error);
-    res.status(500).send('Error sending message');
+  // Convert phone number format from 0500000000 to 972500000000
+  if (phoneNumber.startsWith('0')) {
+    phoneNumber = '972' + phoneNumber.substring(1);
   }
+
+  // Append "@c.us" at the end to form the chatId
+  const chatId = phoneNumber + "@c.us";
+
+  // Send WhatsApp message
+  client.sendMessage(chatId, message)
+    .then(() => {
+      res.status(200).send('Message sent successfully');
+    })
+    .catch((error) => {
+      console.error('Error sending message:', error);
+      res.status(500).send('Error sending message');
+    });
 });
+
 
 
 // Global error handler for unhandled promise rejections
