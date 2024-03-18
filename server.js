@@ -30,19 +30,23 @@ client.on('ready', () => {
 app.use(bodyParser.json());
 
 // Endpoint to handle sending messages
-app.post('/send-message', (req, res) => {
+app.post('/send-message', async (req, res) => {
   const { phoneNumber, message } = req.body;
-  console.log("Num: " + phoneNumber + ", message: " + message)
-  // Send WhatsApp message
-  client.sendMessage(phoneNumber, message)
-    .then(() => {
-      res.status(200).send('Message sent successfully');
-    })
-    .catch((error) => {
-      console.error('Error sending message:', error);
-      res.status(500).send('Error sending message');
-    });
+
+  try {
+    // Find the chat corresponding to the provided phone number
+    const chat = await client.getChatById(phoneNumber);
+
+    // Send WhatsApp message using the chat ID
+    await client.sendMessage(chat.id._serialized, message);
+
+    res.status(200).send('Message sent successfully');
+  } catch (error) {
+    console.error('Error sending message:', error);
+    res.status(500).send('Error sending message');
+  }
 });
+
 
 // Global error handler for unhandled promise rejections
 process.on('unhandledRejection', (reason, promise) => {
