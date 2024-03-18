@@ -26,9 +26,6 @@ client.on('ready', () => {
   console.log('WhatsApp client is ready!');
 });
 
-// Initialize the WhatsApp client
-client.initialize();
-
 // Set up middleware to parse JSON bodies
 app.use(bodyParser.json());
 
@@ -46,6 +43,9 @@ app.post('/send-message', (req, res) => {
       res.status(500).send('Error sending message');
     });
 });
+
+// Initialize the WhatsApp client after setting up event listeners
+client.initialize();
 
 // Route handler for root URL
 app.get('/', (req, res) => {
