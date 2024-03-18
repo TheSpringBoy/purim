@@ -44,6 +44,12 @@ app.post('/send-message', (req, res) => {
     });
 });
 
+// Global error handler for unhandled promise rejections
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+
 // Initialize the WhatsApp client after setting up event listeners
 client.initialize();
 
