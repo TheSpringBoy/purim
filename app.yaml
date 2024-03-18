@@ -1,0 +1,22 @@
+runtime: nodejs12
+
+# Optional: Set the service name and version
+# service: your-service-name
+# version: 1
+
+# Skip files that are not needed for deployment
+skip_files:
+  - ^node_modules$
+
+# Automatic scaling based on request rate
+automatic_scaling:
+  min_instances: 1
+  max_instances: 10
+  min_pending_latency: 30ms  # Default value
+  max_pending_latency: automatic
+
+# Resources (memory, CPU) settings
+resources:
+  cpu: 1
+  memory_gb: 0.5
+  disk_size_gb: 10
