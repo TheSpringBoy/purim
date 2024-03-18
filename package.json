@@ -1,0 +1,25 @@
+{
+  "name": "purim",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheSpringBoy/purim.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TheSpringBoy/purim/issues"
+  },
+  "homepage": "https://github.com/TheSpringBoy/purim#readme",
+  "dependencies": {
+    "express": "^4.18.3",
+    "qrcode-terminal": "^0.12.0",
+    "whatsapp-web.js": "^1.23.0"
+  }
+}
