@@ -26,6 +26,9 @@ client.on('ready', () => {
   console.log('WhatsApp client is ready!');
 });
 
+// Initialize the WhatsApp client
+client.initialize();
+
 // Set up middleware to parse JSON bodies
 app.use(bodyParser.json());
 
