@@ -1,4 +1,4 @@
-runtime: nodejs12
+runtime: nodejs20
 
 # Optional: Set the service name and version
 # service: your-service-name
