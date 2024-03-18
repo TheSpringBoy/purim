@@ -26,7 +26,7 @@ client.on('ready', () => {
   console.log('WhatsApp client is ready!');
 });
 
-// Initialize the WhatsApp client after setting up event listeners
+// Initialize the WhatsApp client
 client.initialize();
 
 // Set up middleware to parse JSON bodies
@@ -45,6 +45,12 @@ app.post('/send-message', (req, res) => {
       console.error('Error sending message:', error);
       res.status(500).send('Error sending message');
     });
+});
+
+// Route handler for root URL
+app.get('/', (req, res) => {
+  // Redirect users to the Google Sheets URL
+  res.redirect('https://docs.google.com/spreadsheets/d/1A5ECQpxs4LTjD7LwCIV2NM23iiaTn4l6QBrU5kJW76A/');
 });
 
 // Start the server
