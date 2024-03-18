@@ -32,7 +32,7 @@ app.use(bodyParser.json());
 // Endpoint to handle sending messages
 app.post('/send-message', (req, res) => {
   const { phoneNumber, message } = req.body;
-
+  console.log("Num: " + phoneNumber + ", message: " + message)
   // Send WhatsApp message
   client.sendMessage(phoneNumber, message)
     .then(() => {
