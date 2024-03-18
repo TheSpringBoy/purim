@@ -1,8 +1,7 @@
 const { Client } = require('whatsapp-web.js');
 const express = require('express');
 const bodyParser = require('body-parser');
-const qrCode = require('qrcode-terminal');
-
+const QRCode = require('qrcode');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -10,9 +9,16 @@ const PORT = process.env.PORT || 3000;
 const client = new Client();
 
 // Set up event listeners
-client.on('qr', (qr) => {
-  // Display QR code in the terminal
-  qrCode.generate(qr, { small: true });
+client.on('qr', async (qr) => {
+  try {
+    // Generate QR code as data URI
+    const qrDataUrl = await QRCode.toDataURL(qr, { scale: 8 });
+
+    // Log the link to the QR code image
+    console.log('QR code:', qrDataUrl);
+  } catch (error) {
+    console.error('Error generating QR code:', error);
+  }
 });
 
 client.on('ready', () => {
