@@ -4,10 +4,6 @@ runtime: nodejs12
 # service: your-service-name
 # version: 1
 
-# Skip files that are not needed for deployment
-skip_files:
-  - ^node_modules$
-
 # Automatic scaling based on request rate
 automatic_scaling:
   min_instances: 1
