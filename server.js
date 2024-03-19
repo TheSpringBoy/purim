@@ -93,7 +93,6 @@ app.use(bodyParser.json());
 // Endpoint to handle sending messages
 app.post('/send-message', (req, res) => {
   let { phoneNumber, message } = req.body;
-  console.log("phone: " + phoneNumber);
   // Convert phone number format from 0500000000 to 972500000000
   if (phoneNumber.startsWith('0')) {
     phoneNumber = '972' + phoneNumber.substring(1);
