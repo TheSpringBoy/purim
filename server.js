@@ -36,31 +36,32 @@ client.on('message', async message => {
     const { body } = message;
     // Check if the message is in the format of adding funds
     if (body.match(/^05\d{8} \+\d+$/)) {
-      const [, phoneNumber, amountToAdd] = body.match(/^(050\d{7}) \+(\d+)$/);
+      const [, phoneNumber, amountToAdd] = body.match(/^(05\d{8}) \+(\d+)$/);
       if (!userCurrency[phoneNumber]) {
         userCurrency[phoneNumber] = 0;
-        client.sendMessage(message.from, `User ${phoneNumber} created. Current currency is ${amountToAdd}`);
+        client.sendMessage(message.from, `למספר שנגמר ב-${phoneNumber.slice(-4)} יש כרגע * מזוזים.`, message.id._serialized);
+        client.sendMessage(phoneNumber + '@c.us', `היתרה הנוכחית שלך היא ${userCurrency[phoneNumber]} מזוזים, מספר נגמר ב-${phoneNumber.slice(-4)}.`);
       } else {
-        client.sendMessage(message.from, `User ${phoneNumber} already exists. Current currency is ${userCurrency[phoneNumber] + parseInt(amountToAdd)}`);
+        userCurrency[phoneNumber] += parseInt(amountToAdd);
+        client.sendMessage(message.from, `למספר שנגמר ב-${phoneNumber.slice(-4)} הוסרו * ועכשיו יש לו ${userCurrency[phoneNumber]} מזוזים.`, message.id._serialized);
+        client.sendMessage(phoneNumber + '@c.us', `היתרה הנוכחית שלך היא ${userCurrency[phoneNumber]} מזוזים, מספר נגמר ב-${phoneNumber.slice(-4)}.`);
       }
-      userCurrency[phoneNumber] += parseInt(amountToAdd);
       console.log(`Added ${amountToAdd} to ${phoneNumber}. New balance: ${userCurrency[phoneNumber]}`);
     }
     // Check if the message is in the format of subtracting funds
-    else if (body.match(/^050\d{7} \-\d+$/)) {
-      const [, phoneNumber, amountToSubtract] = body.match(/^(050\d{7}) \-(\d+)$/);
+    else if (body.match(/^05\d{8} \-\d+$/)) {
+      const [, phoneNumber, amountToSubtract] = body.match(/^(05\d{8}) \-(\d+)$/);
       if (!userCurrency[phoneNumber] || userCurrency[phoneNumber] < parseInt(amountToSubtract)) {
-        console.log(`${phoneNumber} does not have sufficient balance to subtract ${amountToSubtract}`);
+        client.sendMessage(message.from, `למספר שנגמר ב-${phoneNumber.slice(-4)} אין מספיק מזוזים בשביל פעולה זו. כרגע יש לו * מזוזים.`, message.id._serialized);
         return;
       }
       userCurrency[phoneNumber] -= parseInt(amountToSubtract);
+      client.sendMessage(message.from, `למספר שנגמר ב-${phoneNumber.slice(-4)} יש כרגע ${userCurrency[phoneNumber]} מזוזים.`, message.id._serialized);
+      client.sendMessage(phoneNumber + '@c.us', `היתרה הנוכחית שלך היא ${userCurrency[phoneNumber]} מזוזים, מספר נגמר ב-${phoneNumber.slice(-4)}.`);
       console.log(`Subtracted ${amountToSubtract} from ${phoneNumber}. New balance: ${userCurrency[phoneNumber]}`);
-      // Send a reply message to the group
-      client.sendMessage(message.from, `New currency for ${phoneNumber}: ${userCurrency[phoneNumber]}`);
     }
   }
 });
-
 
 // Set up middleware to parse JSON bodies
 app.use(bodyParser.json());
