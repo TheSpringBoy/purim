@@ -34,15 +34,20 @@ client.on('message', async message => {
   console.log("message id: " + message.from);
   if (message.from === '120363263293911851@g.us') {
     console.log("got message");
-    const { body } = message;
+    let { body } = message;
+
+    // Convert phone number format from 0500000000 to 972500000000
+    if (body.startsWith('05')) {
+      body = '972' + body.substring(1);
+    }
+
+    const phoneNumber = body.match(/^972\d{9}$/); // Validate the format
 
     // Check if the message contains only a phone number
-    const phoneNumberRegex = /^05\d{8}$/;
-    if (phoneNumberRegex.test(body)) {
-      const phoneNumber = body.match(phoneNumberRegex)[0];
-      const last4digits = phoneNumber.slice(-4);
-      if (userCurrency[phoneNumber]) {
-        await message.reply(`למספר שנגמר ב-${last4digits} יש ${userCurrency[phoneNumber]} מזוזים.`, undefined, { quotedMessageId: message.id._serialized });
+    if (phoneNumber) {
+      const last4digits = phoneNumber[0].slice(-4);
+      if (userCurrency[phoneNumber[0]]) {
+        await message.reply(`למספר שנגמר ב-${last4digits} יש ${userCurrency[phoneNumber[0]]} מזוזים.`, undefined, { quotedMessageId: message.id._serialized });
       } else {
         await message.reply(`למספר שנגמר ב-${last4digits} אין מזוזים בכלל.`, undefined, { quotedMessageId: message.id._serialized });
       }
@@ -50,8 +55,8 @@ client.on('message', async message => {
     }
 
     // Check if the message is in the format of adding funds
-    if (body.match(/^05\d{8} \+\d+$/)) {
-      const [, phoneNumber, amountToAdd] = body.match(/^(05\d{8}) \+(\d+)$/);
+    if (body.match(/^972\d{9} \+\d+$/)) {
+      const [, phoneNumber, amountToAdd] = body.match(/^(972\d{9}) \+(\d+)$/);
       if (!userCurrency[phoneNumber]) {
         userCurrency[phoneNumber] = parseInt(amountToAdd); // Here you initialize the userCurrency with the amountToAdd
         message.reply(`למספר שנגמר ב-${phoneNumber.slice(-4)} יש כרגע ${userCurrency[phoneNumber]} מזוזים.`, undefined, { quotedMessageId: message.id._serialized });
@@ -62,11 +67,12 @@ client.on('message', async message => {
         // Other code...
       }
       console.log(`Added ${amountToAdd} to ${phoneNumber}. New balance: ${userCurrency[phoneNumber]}`);
+      return;
     }
 
     // Check if the message is in the format of subtracting funds
-    else if (body.match(/^05\d{8} \-\d+$/)) {
-      const [, phoneNumber, amountToSubtract] = body.match(/^(05\d{8}) \-(\d+)$/);
+    else if (body.match(/^972\d{9} \-\d+$/)) {
+      const [, phoneNumber, amountToSubtract] = body.match(/^(972\d{9}) \-(\d+)$/);
       if (!userCurrency[phoneNumber] || userCurrency[phoneNumber] < parseInt(amountToSubtract)) {
         await message.reply(`למספר שנגמר ב-${phoneNumber.slice(-4)} אין מספיק מזוזים בשביל פעולה זו. כרגע יש לו ${userCurrency[phoneNumber]} מזוזים.`, undefined, { quotedMessageId: message.id._serialized });
         return;
@@ -75,12 +81,10 @@ client.on('message', async message => {
       await message.reply(`מספר ${phoneNumber.slice(-4)}: הוסרו ${amountToSubtract} מזוזים. היתרה הנוכחית: ${userCurrency[phoneNumber]} מזוזים.`, undefined, { quotedMessageId: message.id._serialized });
       await client.sendMessage(phoneNumber + '@c.us', `היתרה הנוכחית שלך היא ${userCurrency[phoneNumber]} מזוזים, מספר נגמר ב-${phoneNumber.slice(-4)}.`);
       console.log(`Subtracted ${amountToSubtract} from ${phoneNumber}. New balance: ${userCurrency[phoneNumber]}`);
+      return;
     }
   }
 });
-
-
-
 
 
 // Set up middleware to parse JSON bodies
@@ -90,9 +94,10 @@ app.use(bodyParser.json());
 app.post('/send-message', (req, res) => {
   let { phoneNumber, message } = req.body;
 
-  // Convert phone number format from 0500000000 to 050-000-0000
-  phoneNumber = phoneNumber.replace(/^(\d{3})(\d{3})(\d{4})$/, '$1-$2-$3');
-
+  // Convert phone number format from 0500000000 to 972500000000
+  if (phoneNumber.startsWith('0')) {
+    phoneNumber = '972' + phoneNumber.substring(1);
+  }
   // Append "@c.us" at the end to form the chatId
   const chatId = phoneNumber + "@c.us";
 
