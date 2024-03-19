@@ -31,12 +31,11 @@ client.on('ready', () => {
 
 client.on('message', async message => {
   // Check if the message is from the desired group
-  console.log(message.from);
   if (message.from === '120363263293911851@g.us') { 
     console.log("got message");
     const { body } = message;
     // Check if the message is in the format of adding funds
-    if (body.match(/^050\d{7} \+\d+$/)) {
+    if (body.match(/^05\d{8} \+\d+$/)) {
       const [, phoneNumber, amountToAdd] = body.match(/^(050\d{7}) \+(\d+)$/);
       if (!userCurrency[phoneNumber]) {
         userCurrency[phoneNumber] = 0;
