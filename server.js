@@ -98,6 +98,7 @@ app.post('/send-message', (req, res) => {
   if (phoneNumber.startsWith('0')) {
     phoneNumber = '972' + phoneNumber.substring(1);
   }
+
   // Append "@c.us" at the end to form the chatId
   const chatId = phoneNumber + "@c.us";
 
