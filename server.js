@@ -35,6 +35,20 @@ client.on('message', async message => {
   if (message.from === '120363263293911851@g.us') { 
     console.log("got message");
     const { body } = message;
+
+    // Check if the message contains only a phone number
+    const phoneNumberRegex = /^05\d{8}$/;
+    if (phoneNumberRegex.test(body)) {
+      const phoneNumber = body.match(phoneNumberRegex)[0];
+      const last4digits = phoneNumber.slice(-4);
+      if (userCurrency[phoneNumber]) {
+        message.reply(`למספר שנגמר ב-${last4digits} יש ${userCurrency[phoneNumber]} מזוזים.`);
+      } else {
+        message.reply(`למספר שנגמר ב-${last4digits} אין מזוזים בכלל.`);
+      }
+      return;
+    }
+
     // Check if the message is in the format of adding funds
     if (body.match(/^05\d{8} \+\d+$/)) {
       const [, phoneNumber, amountToAdd] = body.match(/^(05\d{8}) \+(\d+)$/);
@@ -63,6 +77,7 @@ client.on('message', async message => {
     }
   }
 });
+
 
 
 // Set up middleware to parse JSON bodies
