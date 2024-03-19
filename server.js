@@ -42,9 +42,9 @@ client.on('message', async message => {
       const phoneNumber = body.match(phoneNumberRegex)[0];
       const last4digits = phoneNumber.slice(-4);
       if (userCurrency[phoneNumber]) {
-        message.reply(`למספר שנגמר ב-${last4digits} יש ${userCurrency[phoneNumber]} מזוזים.`, message.id._serialized);
+        await message.reply(`למספר שנגמר ב-${last4digits} יש ${userCurrency[phoneNumber]} מזוזים.`, undefined, { quotedMessageId: message.id._serialized });
       } else {
-        message.reply(`למספר שנגמר ב-${last4digits} אין מזוזים בכלל.`, message.id._serialized);
+        await message.reply(`למספר שנגמר ב-${last4digits} אין מזוזים בכלל.`, undefined, { quotedMessageId: message.id._serialized });
       }
       return;
     }
@@ -54,12 +54,12 @@ client.on('message', async message => {
       const [, phoneNumber, amountToAdd] = body.match(/^(05\d{8}) \+(\d+)$/);
       if (!userCurrency[phoneNumber]) {
         userCurrency[phoneNumber] = parseInt(amountToAdd);
-        message.reply(`למספר שנגמר ב-${phoneNumber.slice(-4)} יש כרגע ${userCurrency[phoneNumber]} מזוזים.`, message.id._serialized);
-        client.sendMessage(phoneNumber + '@c.us', `היתרה הנוכחית שלך היא ${userCurrency[phoneNumber]} מזוזים, מספר נגמר ב-${phoneNumber.slice(-4)}.`);
+        await message.reply(`למספר שנגמר ב-${phoneNumber.slice(-4)} יש כרגע ${userCurrency[phoneNumber]} מזוזים.`, undefined, { quotedMessageId: message.id._serialized });
+        await client.sendMessage(phoneNumber + '@c.us', `היתרה הנוכחית שלך היא ${userCurrency[phoneNumber]} מזוזים, מספר נגמר ב-${phoneNumber.slice(-4)}.`);
       } else {
         userCurrency[phoneNumber] += parseInt(amountToAdd);
-        message.reply(`למספר שנגמר ב-${phoneNumber.slice(-4)} הוספו ${amountToAdd} מזוזים. היתרה הנוכחית: ${userCurrency[phoneNumber]} מזוזים.`, message.id._serialized);
-        client.sendMessage(phoneNumber + '@c.us', `היתרה הנוכחית שלך היא ${userCurrency[phoneNumber]} מזוזים, מספר נגמר ב-${phoneNumber.slice(-4)}.`);
+        await message.reply(`למספר שנגמר ב-${phoneNumber.slice(-4)} הוספו ${amountToAdd} מזוזים. היתרה הנוכחית: ${userCurrency[phoneNumber]} מזוזים.`, undefined, { quotedMessageId: message.id._serialized });
+        await client.sendMessage(phoneNumber + '@c.us', `היתרה הנוכחית שלך היא ${userCurrency[phoneNumber]} מזוזים, מספר נגמר ב-${phoneNumber.slice(-4)}.`);
       }
       console.log(`Added ${amountToAdd} to ${phoneNumber}. New balance: ${userCurrency[phoneNumber]}`);
     }
@@ -67,16 +67,17 @@ client.on('message', async message => {
     else if (body.match(/^05\d{8} \-\d+$/)) {
       const [, phoneNumber, amountToSubtract] = body.match(/^(05\d{8}) \-(\d+)$/);
       if (!userCurrency[phoneNumber] || userCurrency[phoneNumber] < parseInt(amountToSubtract)) {
-        message.reply(`למספר שנגמר ב-${phoneNumber.slice(-4)} אין מספיק מזוזים בשביל פעולה זו. כרגע יש לו ${userCurrency[phoneNumber]} מזוזים.`, message.id._serialized);
+        await message.reply(`למספר שנגמר ב-${phoneNumber.slice(-4)} אין מספיק מזוזים בשביל פעולה זו. כרגע יש לו ${userCurrency[phoneNumber]} מזוזים.`, undefined, { quotedMessageId: message.id._serialized });
         return;
       }
       userCurrency[phoneNumber] -= parseInt(amountToSubtract);
-      message.reply(`מספר ${phoneNumber.slice(-4)}: הוסרו ${amountToSubtract} מזוזים. היתרה הנוכחית: ${userCurrency[phoneNumber]} מזוזים.`, message.id._serialized);
-      client.sendMessage(phoneNumber + '@c.us', `היתרה הנוכחית שלך היא ${userCurrency[phoneNumber]} מזוזים, מספר נגמר ב-${phoneNumber.slice(-4)}.`);
+      await message.reply(`מספר ${phoneNumber.slice(-4)}: הוסרו ${amountToSubtract} מזוזים. היתרה הנוכחית: ${userCurrency[phoneNumber]} מזוזים.`, undefined, { quotedMessageId: message.id._serialized });
+      await client.sendMessage(phoneNumber + '@c.us', `היתרה הנוכחית שלך היא ${userCurrency[phoneNumber]} מזוזים, מספר נגמר ב-${phoneNumber.slice(-4)}.`);
       console.log(`Subtracted ${amountToSubtract} from ${phoneNumber}. New balance: ${userCurrency[phoneNumber]}`);
     }
   }
 });
+
 
 
 
