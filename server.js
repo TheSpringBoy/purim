@@ -31,9 +31,7 @@ client.on('ready', () => {
 
 client.on('message', async message => {
   // Check if the message is from the desired group
-  console.log("message id: " + message.from);
   if (message.from === '120363263293911851@g.us') {
-    console.log("got message");
     let { body } = message;
 
     // Convert phone number format from 0500000000 to 972500000000
