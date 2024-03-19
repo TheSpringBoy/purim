@@ -31,8 +31,8 @@ client.on('ready', () => {
 
 client.on('message', async message => {
   // Check if the message is from the desired group
-  console.log("message id: "+message.from);
-  if (message.from === '120363263293911851@g.us') { 
+  console.log("message id: " + message.from);
+  if (message.from === '120363263293911851@g.us') {
     console.log("got message");
     const { body } = message;
 
@@ -50,19 +50,19 @@ client.on('message', async message => {
     }
 
     // Check if the message is in the format of adding funds
-  if (body.match(/^05\d{8} \+\d+$/)) {
-    const [, phoneNumber, amountToAdd] = body.match(/^(05\d{8}) \+(\d+)$/);
-    if (!userCurrency[phoneNumber]) {
-      userCurrency[phoneNumber] = parseInt(amountToAdd); // Here you initialize the userCurrency with the amountToAdd
-      message.reply(`למספר שנגמר ב-${phoneNumber.slice(-4)} יש כרגע ${userCurrency[phoneNumber]} מזוזים.`, undefined, { quotedMessageId: message.id._serialized });
-      // Other code...
-    } else {
-      userCurrency[phoneNumber] += parseInt(amountToAdd); // Here you add the amountToAdd to the existing userCurrency[phoneNumber]
-      message.reply(`למספר שנגמר ב-${phoneNumber.slice(-4)} הוספו ${amountToAdd} מזוזים. היתרה הנוכחית: ${userCurrency[phoneNumber]} מזוזים.`, undefined, { quotedMessageId: message.id._serialized });
-      // Other code...
+    if (body.match(/^05\d{8} \+\d+$/)) {
+      const [, phoneNumber, amountToAdd] = body.match(/^(05\d{8}) \+(\d+)$/);
+      if (!userCurrency[phoneNumber]) {
+        userCurrency[phoneNumber] = parseInt(amountToAdd); // Here you initialize the userCurrency with the amountToAdd
+        message.reply(`למספר שנגמר ב-${phoneNumber.slice(-4)} יש כרגע ${userCurrency[phoneNumber]} מזוזים.`, undefined, { quotedMessageId: message.id._serialized });
+        // Other code...
+      } else {
+        userCurrency[phoneNumber] += parseInt(amountToAdd); // Here you add the amountToAdd to the existing userCurrency[phoneNumber]
+        message.reply(`למספר שנגמר ב-${phoneNumber.slice(-4)} הוספו ${amountToAdd} מזוזים. היתרה הנוכחית: ${userCurrency[phoneNumber]} מזוזים.`, undefined, { quotedMessageId: message.id._serialized });
+        // Other code...
+      }
+      console.log(`Added ${amountToAdd} to ${phoneNumber}. New balance: ${userCurrency[phoneNumber]}`);
     }
-    console.log(`Added ${amountToAdd} to ${phoneNumber}. New balance: ${userCurrency[phoneNumber]}`);
-  }
 
     // Check if the message is in the format of subtracting funds
     else if (body.match(/^05\d{8} \-\d+$/)) {
@@ -78,6 +78,7 @@ client.on('message', async message => {
     }
   }
 });
+
 
 
 
