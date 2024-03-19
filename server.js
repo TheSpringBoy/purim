@@ -31,6 +31,7 @@ client.on('ready', () => {
 
 client.on('message', async message => {
   // Check if the message is from the desired group
+  console.log(message.from);
   if (message.from === 'K2715brAt8j7uq3It7TUK8') { 
     console.log("got message");
     const { body } = message;
