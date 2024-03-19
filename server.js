@@ -32,7 +32,7 @@ client.on('ready', () => {
 client.on('message', async message => {
   // Check if the message is from the desired group
   console.log(message.from);
-  if (message.from === 'K2715brAt8j7uq3It7TUK8') { 
+  if (message.from === '120363263293911851@g.us') { 
     console.log("got message");
     const { body } = message;
     // Check if the message is in the format of adding funds
