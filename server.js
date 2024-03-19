@@ -31,7 +31,7 @@ client.on('ready', () => {
 
 client.on('message', async message => {
   // Check if the message is from the desired group
-  if (message.from.endsWith('@g.us') && message.from.includes('תשלומים שוק פורים תשפד')) {
+  if (message.from === 'K2715brAt8j7uq3It7TUK8') { 
     const { body } = message;
     // Check if the message is in the format of adding funds
     if (body.match(/^050\d{7} \+\d+$/)) {
